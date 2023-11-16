@@ -5,9 +5,9 @@ from course.models import Course
 class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс')
     title = models.CharField(max_length=200, verbose_name='Название')
-    preview = models.ImageField(upload_to='lesson_previews/', verbose_name='Превью')
+    preview = models.ImageField(upload_to='lesson_previews/', verbose_name='Превью', null=True, blank=True)
     description = models.TextField(verbose_name='Описание')
-    video_url = models.URLField(verbose_name='Ссылка на видео')
+    video_url = models.URLField(verbose_name='Ссылка на видео', null=True, blank=True)
 
     class Meta:
         verbose_name = "Урок"
