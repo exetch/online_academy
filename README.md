@@ -37,3 +37,11 @@ poetry install
 python manage.py create_superuser
 ```
 
+## 5. Добавление тестовых данных в проект
+
+Чтобы создать тестовые данные, выполните следующую команду в командной строке:
+
+```bash
+python manage.py generate_data
+```
+
