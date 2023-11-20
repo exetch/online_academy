@@ -24,7 +24,7 @@ class Command(BaseCommand):
 
         for _ in range(20):
             email = fake.email()
-            password = fake.password(length=10, special_chars=True, digits=True, upper_case=True, lower_case=True)
+            password = '123qwe456rty'
             first_name = fake.first_name()
             last_name = fake.last_name()
             phone_number = fake.numerify(text='###########')
@@ -131,6 +131,6 @@ class Command(BaseCommand):
                 amount=amount,
                 payment_method=payment_method
             )
-            self.stdout.write(self.style.SUCCESS(f'Создан платеж {payment.id} от {user}'))
+            self.stdout.write(f'Создан платеж {payment.id} от {user}')
 
             payment.save()
