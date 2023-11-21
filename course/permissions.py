@@ -1,13 +1,10 @@
 from rest_framework import permissions
 
-from course.models import Course
-from lesson.models import Lesson
-from payment.models import Payment
 
-
-class ModeratorEditPermissions(permissions.BasePermission):
+class ModeratorOrUser(permissions.BasePermission):
     """
     Разрешение для модераторов на чтение и обновление, но не на создание или удаление.
+    Пользователи, не являющиеся модераторами, могут видеть и редактировать только свои курсы и уроки.
     """
 
     def has_permission(self, request, view):
@@ -15,33 +12,21 @@ class ModeratorEditPermissions(permissions.BasePermission):
             if request.method in permissions.SAFE_METHODS or request.method in ['PUT', 'PATCH']:
                 return True
             return False
-        return True
 
-    def has_object_permission(self, request, view, obj):
-        if request.user.is_staff:
-            if request.method in permissions.SAFE_METHODS or request.method in ['PUT', 'PATCH']:
-                return True
-            return False
-        return True
-
-class UserPaidContentPermissions(permissions.BasePermission):
-    """
-    Разрешает пользователям видеть и редактировать только курсы и уроки, которые они оплатили.
-    """
-    def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS or request.method in ['PUT', 'PATCH']:
+        if request.method in ['GET', 'POST', 'PUT', 'PATCH']:
             return True
+
         return False
 
     def has_object_permission(self, request, view, obj):
-        user = request.user
-        if user.is_staff:
+        if request.user.is_staff:
+            if request.method in permissions.SAFE_METHODS or request.method in ['PUT', 'PATCH']:
+                return True
             return False
 
-        if isinstance(obj, Course):
-            return Payment.objects.filter(user=user, paid_course=obj).exists()
+        if hasattr(obj, 'owner') and request.method not in permissions.SAFE_METHODS:
+            return obj.owner == request.user
 
-        if isinstance(obj, Lesson):
-            return Payment.objects.filter(user=user, paid_lesson=obj).exists()
+        return True
 
-        return False
+

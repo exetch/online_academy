@@ -1,8 +1,7 @@
 from rest_framework import viewsets
 
-from payment.models import Payment
 from .models import Course
-from .permissions import ModeratorEditPermissions, UserPaidContentPermissions
+from .permissions import ModeratorOrUser
 from .serializers import CourseSerializer
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -11,8 +10,9 @@ class CourseViewSet(viewsets.ModelViewSet):
         if user.is_staff:
             return Course.objects.all()
         else:
-            paid_courses_ids = Payment.objects.filter(user=user, paid_course__isnull=False).values_list('paid_course',
-                                                                                                        flat=True)
-            return Course.objects.filter(id__in=paid_courses_ids)
+            return Course.objects.filter(owner=user)
     serializer_class = CourseSerializer
-    permission_classes = [ModeratorEditPermissions, UserPaidContentPermissions]
+    permission_classes = [ModeratorOrUser]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)

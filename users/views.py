@@ -1,5 +1,4 @@
 from rest_framework import viewsets
-from rest_framework.exceptions import PermissionDenied
 from .models import CustomUser
 from .permissions import IsOwnerOrReadOnly
 from .serializers import UserSerializer
