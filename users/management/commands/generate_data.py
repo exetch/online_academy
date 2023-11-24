@@ -22,7 +22,7 @@ class Command(BaseCommand):
     def generate_users(self):
         fake = Faker()
 
-        for _ in range(20):
+        for _ in range(2):
             email = fake.email()
             password = '123qwe456rty'
             first_name = fake.first_name()
@@ -60,11 +60,12 @@ class Command(BaseCommand):
                 "description": "Этот курс отлично подойдет тем кто строит карьеру блестящего менеджера, управленца, чиновника. Научитесь уверенно вести диалоги на любые темы, сохраняя абсолютное неведение по существу."
             }
         ]
-
+        all_users = CustomUser.objects.all()
         for course_data in courses_data:
             course = Course.objects.create(
                 title=course_data["title"],
-                description=course_data["description"]
+                description=course_data["description"],
+                owner=random.choice(all_users)
             )
             self.stdout.write(f'Создан курс: {course.title}')
 
@@ -92,7 +93,7 @@ class Command(BaseCommand):
                  "description": "Узнайте, как использовать невербальные сигналы и мимику для поддержания уверенности."}
             ]
         }
-
+        all_users = CustomUser.objects.all()
         for course_title, lesson_data in lessons_data.items():
             course = Course.objects.get(title=course_title)
             for lesson in lesson_data:
@@ -100,7 +101,8 @@ class Command(BaseCommand):
                     course=course,
                     title=lesson["title"],
                     description=lesson["description"],
-                    video_url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    video_url="https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                    owner=random.choice(all_users)
                 )
                 self.stdout.write(f'Создан урок: {lesson["title"]} для курса {course.title}')
 

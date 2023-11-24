@@ -14,3 +14,15 @@ class Course(models.Model):
     def __str__(self):
         return self.title
 
+class Subscription(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    is_subscribed = models.BooleanField(default=True)
+
+    class Meta:
+        unique_together = ('user', 'course')
+        verbose_name = "Подписка"
+        verbose_name_plural = "Подписки"
+
+    def __str__(self):
+        return f"{self.user.email} {'подписан' if self.is_subscribed else 'не подписан'} на {self.course.title}"
