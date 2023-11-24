@@ -27,7 +27,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'], url_path='subscribe')
     def subscribe(self, request, pk=None):
         """
-        При отправке POST-запроса на /subscriotions/{id}/subscribe/
+        При отправке POST-запроса на /courses/{course_id}/subscribe/
         обновляет запись в Subscription, устанавливая is_subscribed = True
         """
         course = self.get_object()
@@ -37,7 +37,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'], url_path='unsubscribe')
     def unsubscribe(self, request, pk=None):
         """
-        При отправке POST-запроса на /subscriptions/{id}/unsubscribe/
+        При отправке POST-запроса на /courses/{course_id}/unsubscribe/
         обновляет запись в Subscription, устанавливая is_subscribed = False
         """
         course = self.get_object()

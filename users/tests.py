@@ -1,10 +1,10 @@
-import os
-import sys
-from datetime import datetime
-import django
-sys.path.append('C:/Users/ASUS/PycharmProjects/online_academy')
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
-django.setup()
+# import os
+# import sys
+# from datetime import datetime
+# import django
+# sys.path.append('C:/Users/ASUS/PycharmProjects/online_academy')
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+# django.setup()
 from rest_framework.test import APITestCase
 from users.models import CustomUser
 from course.models import Course
