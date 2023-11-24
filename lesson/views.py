@@ -2,6 +2,7 @@ from rest_framework import generics
 
 from course.permissions import ModeratorOrUser
 from .models import Lesson
+from .paginators import LessonPaginator
 from .serializers import LessonSerializer
 
 class LessonListCreate(generics.ListCreateAPIView):
@@ -14,6 +15,7 @@ class LessonListCreate(generics.ListCreateAPIView):
             return Lesson.objects.filter(owner=user)
     serializer_class = LessonSerializer
     permission_classes = [ModeratorOrUser]
+    pagination_class = LessonPaginator
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

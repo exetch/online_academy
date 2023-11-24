@@ -13,14 +13,14 @@ class ModeratorOrUser(permissions.BasePermission):
                 return True
             return False
 
-        if request.method in ['GET', 'POST', 'PUT', 'PATCH']:
+        if request.method in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']:
             return True
 
         return False
 
     def has_object_permission(self, request, view, obj):
         if request.user.is_staff:
-            if request.method in permissions.SAFE_METHODS or request.method in ['PUT', 'PATCH']:
+            if request.method in permissions.SAFE_METHODS or request.method in ['PUT', 'PATCH', 'DELETE']:
                 return True
             return False
 
