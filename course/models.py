@@ -6,6 +6,7 @@ class Course(models.Model):
     preview = models.ImageField(upload_to='course_previews/', verbose_name='Превью', null=True, blank=True)
     description = models.TextField(verbose_name='Описание')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Владелец', null=True, blank=True)
+    price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Цена', null=True, blank=True)
 
     class Meta:
         verbose_name = "Курс"

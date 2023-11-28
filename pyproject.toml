@@ -18,6 +18,9 @@ django-filter = "^23.3"
 faker = "^20.0.3"
 djangorestframework-simplejwt = "^5.3.0"
 coverage = "^7.3.2"
+drf-yasg = "^1.21.7"
+django-cors-headers = "^4.3.1"
+stripe = "^7.6.0"
 
 
 [build-system]
