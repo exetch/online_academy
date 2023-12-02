@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
@@ -6,6 +8,8 @@ from .models import Course, Subscription
 from .paginators import CoursePaginator
 from .permissions import ModeratorOrUser
 from .serializers import CourseSerializer
+from course.tasks import send_course_update_email
+from django.utils import timezone
 
 class CourseViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
@@ -23,6 +27,19 @@ class CourseViewSet(viewsets.ModelViewSet):
             serializer.save(owner=self.request.user)
         else:
             raise PermissionDenied('User must be authenticated to create a course.')
+
+    def perform_update(self, serializer):
+        course = serializer.instance
+        time_since_last_update = timezone.now() - course.last_updated
+
+        # Проверка, что курс не обновлялся в последние 4 часа
+        if time_since_last_update > timedelta(hours=4):
+            super().perform_update(serializer)
+            subscribers = Subscription.objects.filter(course=course, is_subscribed=True)
+            for subscriber in subscribers:
+                send_course_update_email.delay(subscriber.user.email, course.title)
+        else:
+            super().perform_update(serializer)
 
     @action(detail=True, methods=['post'], url_path='subscribe')
     def subscribe(self, request, pk=None):
