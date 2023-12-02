@@ -6,12 +6,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         user = CustomUser.objects.create(
-            email='moderator@example.net',
+            email='gassemark@gmail.com',
             email_verificated=True,
             first_name='moderator',
             last_name='moderatorov',
             is_superuser=False,
-            is_staff=True,
+            is_staff=False,
             is_active=True,
         )
         user.set_password('123qwe456rty')
