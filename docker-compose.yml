@@ -1,0 +1,33 @@
+version: '3.11'
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+  redis:
+    image: redis
+    ports:
+      - "6372:6372"
+  celery:
+    build: .
+    command: celery -A config worker -l INFO
+    depends_on:
+      - redis
+      - web
+  celery_beat:
+    build: .
+    command: celery -A config beat -S django
+    depends_on:
+      - redis
+      - web
